@@ -1,113 +1,107 @@
-# ITC ESG Social Dashboard 2026
+# ITC Social Performance Dashboard
 
-An end-to-end ESG data pipeline and dashboard that transforms ITC Limited's raw **BRSR (Business Responsibility & Sustainability Report) Social pillar disclosures** — extracted from the company's *Report and Accounts 2026* — into a clean, chart-ready Excel workbook and a single-page executive dashboard.
+*A Python ETL Pipeline and Interactive Excel Dashboard for ESG Analysis*
 
-![ITC ESG Social Dashboard 2026](ITC_SOCIAL_DASHBOARD.png)
-
----
-
-## 📌 Overview
-
-Public ESG/BRSR disclosures are usually locked inside PDF tables — multi-level merged headers, inconsistent formatting, and no analysis-ready structure. This project builds a **Python ETL pipeline** that:
-
-1. Parses 35 raw BRSR Social tables (covering **Principles 3, 4, 5, 6, and 8**)
-2. Reconstructs merged/multi-level headers programmatically
-3. Classifies header rows vs. data rows automatically
-4. Outputs a clean, formatted Excel workbook with one readable table per disclosure
-5. Generates **chart-ready pivot tables** — one self-contained table per KPI/metric, with no manual pivoting required
-6. Feeds into a single-page **ESG Social Dashboard** comparing FY2024–25 vs FY2025–26 performance
+**Repository:** ITC-Social-Performance-Dashboard | **Author:** Jawahar
 
 ---
 
-## 📊 The Dashboard
+Python-based ETL pipeline and interactive Excel dashboard for analyzing ITC Limited's social ESG performance using annual report data. This project extracts, cleans, and structures social KPI data from ITC's Report and Accounts 2026 (BRSR / Sustainability disclosures), transforming unstructured PDF tables into a clean, analysis-ready dataset, then visualizes it through a single-page interactive Excel dashboard comparing FY2024-25 against FY2025-26 performance.
 
-The final dashboard (`SOCIAL DASHBOARD` sheet) summarizes ITC's social performance across:
+![Dashboard Preview](ITC_SOCIAL_DASHBOARD.png)
+*Figure 1: Final ESG social performance dashboard (FY2024-25 vs FY2025-26)*
 
-- **Workforce composition** — Permanent vs. Other-than-Permanent Employees & Workers, by gender
-- **Employee well-being** — Health insurance coverage, maternity benefits, return-to-work & retention rates
-- **Training coverage** — Health & Safety and Skill Upgradation, by employee category and gender
-- **Performance & career development** review coverage
-- **Safety metrics** — LTIFR, recordable injuries, fatalities (Employees vs. Workers)
-- **Human rights & pay equity** — Gender pay gap, minimum wage compliance
-- **Sourcing** — MSME sourcing %, domestic sourcing %, by location type (Urban/Rural/Semi-urban/Metro)
-- **CSR impact** — Spend across aspirational districts, and beneficiaries by program (Women Empowerment, Education, Livelihood, Health & Nutrition, Climate Smart Agriculture)
+## 1. Project Objectives
 
-**Key headline metrics (FY2025-26):**
+- Convert unstructured PDF disclosures from a 300+ page corporate annual report into a structured, analysis-ready dataset.
+- Isolate and validate social KPIs (Workforce, Wellbeing, Training, Safety, Human Rights, Sourcing, CSR) relevant to BRSR reporting.
+- Programmatically reconstruct merged, multi-level PDF table headers without manual re-typing.
+- Build a reproducible Python ETL pipeline covering parsing, classification, and transformation.
+- Deliver a decision-ready, interactive Excel dashboard comparing year-over-year social performance.
+- Demonstrate applied ESG analytics capability as part of a professional sustainability analytics portfolio.
 
-| Metric | Value |
+## 2. Dashboard Highlights
+
+- **Workforce Composition**: Permanent vs. Other-than-Permanent Employees and Workers, by gender.
+- **Employee Wellbeing**: Health insurance coverage, maternity benefits, return-to-work and retention rates.
+- **Training Coverage**: Health & Safety and Skill Upgradation training, by employee category and gender.
+- **Performance & Career Development**: Review coverage across Employees and Workers.
+- **Safety Metrics**: LTIFR, recordable injuries, and fatalities (Employees vs. Workers).
+- **Human Rights & Pay Equity**: Gender pay gap and minimum wage compliance.
+- **Sourcing**: MSME sourcing share, domestic sourcing share, and presence by location type.
+- **CSR Impact**: Spend across aspirational districts and beneficiaries by program area.
+
+## 3. Repository Structure
+
+| File | Contents | Purpose |
+|---|---|---|
+| `ITC_SOCIAL_DASHBOARD.png`, `ITC_SOCIAL_DASHBOARD.pdf` | Dashboard exports | Final dashboard, for quick viewing |
+| `ITC_Social_Dataset___Dashboard.xlsx` | Dashboard + 35 cleaned tables + chart-ready pivot tables | Full working workbook |
+| `ITC_social_dataset.py` | ETL script | Parses raw BRSR tables into the refined, chart-ready workbook |
+| `README.md` | — | Project documentation |
+
+## 4. Data Source
+
+Data is extracted from ITC Limited's publicly available Report and Accounts 2026, specifically the Business Responsibility and Sustainability Report (BRSR) Social section (pages 367–395), covering social disclosures for FY2024-25 and FY2025-26. The source PDF is not included in this repository due to file size; it can be downloaded from ITC Limited's official investor relations page.
+
+## 5. ETL Pipeline Workflow
+
+The pipeline is implemented as a single script, `ITC_social_dataset.py`, structured around the following stages:
+
+| Stage | Function | Purpose |
+|---|---|---|
+| 1 | `load_tables()` | Loads all 35 raw BRSR Social tables extracted from the source PDF. |
+| 2 | `classify_rows()` | Distinguishes header rows from data rows by detecting data-like cells (numbers, NA/dash markers, long free text) vs. pure label text. |
+| 3 | `fill_headers_hierarchical()` | Reconstructs multi-level merged headers (e.g. FY → Gender → Metric), resetting the fill at each group boundary so labels don't bleed across unrelated columns. |
+| 4 | `build_table_sheet()` | Renders a clean, formatted, human-readable version of each source table. |
+| 5 | `build_metric_tables()` | Melts each table into per-KPI cross-tabs (Category × Financial Year). |
+| 6 | `build_tables_sheet()` | Writes each metric's cross-tab as a self-contained, chart-ready table. |
+
+## 6. Datasets
+
+- **`ITC_Social_Dataset___Dashboard.xlsx`**: Contains the dashboard, 35 cleaned source tables (one per BRSR disclosure), and their corresponding `_Tables` sheets — one chart-ready cross-tab per KPI, with FY2024-25 and FY2025-26 values side by side.
+
+Each `_Tables` sheet follows a consistent structure:
+
+| Column | Description |
 |---|---|
-| Total Employees | 11,442 |
-| Female Employees | 2,080 |
-| Health Insurance Coverage | 100% |
-| Maternity Benefits Coverage | 100% |
-| Return to Work Rate | 100% |
-| LTIFR | 0.02 |
-| Employee Fatalities | 0 |
-| Worker Union Membership | 86% |
+| Category | Row-level identity (e.g. Employees – Permanent – Male) |
+| FY 2025-26 | Current financial year value |
+| FY 2024-25 | Previous financial year value |
+| Unit | Noted in the block title (Number or %) |
 
----
+## 7. Key Year-over-Year Findings
 
-## 🗂 Repository Contents
+- Total employees stood at 11,442, with female representation at 2,080 (~18%).
+- Health insurance, maternity benefits, and return-to-work rates all held at 100% coverage.
+- LTIFR improved to 0.02, with zero employee fatalities recorded.
+- Worker union membership stood at 86%.
+- Gender pay gap (gross wages paid to females as % of total) moved from 10% to 11%.
+- CSR spend in aspirational districts totaled ~₹4.99 crore (in Rs. Lakhs) across 17+ states, with Women Empowerment and Health & Nutrition programs receiving the largest beneficiary allocations.
 
-| File | Description |
-|---|---|
-| `ITC_social_dataset.py` | Python ETL script — parses raw BRSR tables and builds the refined, chart-ready workbook |
-| `ITC_Social_Dataset___Dashboard.xlsx` | Final Excel workbook — includes the dashboard, all 35 cleaned data tables, and their chart-ready pivot tables |
-| `ITC_SOCIAL_DASHBOARD.png` | Static image export of the dashboard |
-| `ITC_SOCIAL_DASHBOARD.pdf` | PDF export of the dashboard, for quick viewing/sharing |
-| `ITC-Report-and-Accounts-2026.pdf` | Original source report (ITC Limited, public disclosure) |
+## 8. Tech Stack
 
----
+- **Python**: `openpyxl`, `re`
+- **Excel**: Pivot tables and charts — a native Excel dashboard with no external BI tool required.
 
-## ⚙️ How It Works
-
-The pipeline (`ITC_social_dataset.py`) is built with `openpyxl` and does the following for each of the 35 BRSR Social tables:
-
-1. **`classify_rows()`** — distinguishes header rows from data rows by detecting "data-like" cells (numbers, NA/dash markers, or long free-text) vs. pure label text
-2. **`fill_headers_hierarchical()`** — reconstructs multi-level merged headers (e.g. *FY → Gender → Metric*) by forward-filling each header level, resetting at group boundaries so labels don't bleed across unrelated columns
-3. **`build_table_sheet()`** — renders a clean, formatted, human-readable version of each source table
-4. **`build_metric_tables()` / `build_tables_sheet()`** — melts each table into **one small cross-tab per metric/KPI** (Category × Financial Year), so every table is immediately chart-ready with no pivoting needed
-
-### Output structure per BRSR table
-```
-<TableName>            → Clean formatted version of the original table
-<TableName>_Tables     → One mini table per metric, ready for Insert > Chart
-```
-
----
-
-## 🚀 Usage
+## 9. How to Reproduce
 
 ```bash
 pip install openpyxl
+```
 
+Update the `SRC` and `OUT` paths at the top of `ITC_social_dataset.py` to point to your local raw dataset and desired output location, then run:
+
+```bash
 python ITC_social_dataset.py
 ```
 
-Update the paths at the top of the script before running:
-```python
-SRC = 'path/to/ITC_Social_Dataset_2026.xlsx'          # raw extracted BRSR tables
-OUT = 'path/to/ITC_Social_Dataset_2026_Refined.xlsx'  # output workbook
-```
+The refined workbook is written to the configured `OUT` path. The dashboard itself is built manually in Excel on top of the generated `_Tables` sheets.
 
----
+## 10. About the Author
 
-## 📚 Source & Scope
+Built by **Jawahar**, an MBA and MSc graduate focused on ESG Analyst and Data/Business Analyst roles. This dashboard was built voluntarily using ITC Limited's publicly available report data, as part of a hands-on portfolio project demonstrating applied ESG analytics capability.
 
-- **Source:** ITC Limited, *Report and Accounts 2026* (Business Responsibility & Sustainability Report — Social section)
-- **Coverage:** FY 2025-26 (Current Financial Year) vs. FY 2024-25 (Previous Financial Year), as disclosed
-- **BRSR Principles covered:** 3 (Employee Well-being), 4 (Stakeholder Engagement), 5 (Human Rights), 6 (Environment), 8 (Inclusive Growth / CSR)
-- All figures are reproduced exactly as disclosed in the source report — no values have been estimated, altered, or recalculated.
+## 11. License
 
----
-
-## 🛠 Tech Stack
-
-- **Python** (`openpyxl`, `re`)
-- **Excel** (PivotTables, PivotCharts, dashboard layout)
-
----
-
-## 📝 Note
-
-This is a personal ESG/data analytics portfolio project built for skill demonstration purposes (data cleaning, ETL scripting, and dashboard design). All underlying data is sourced from ITC Limited's publicly available Report and Accounts 2026.
+This project is for educational and portfolio purposes. Underlying data belongs to ITC Limited and is sourced from their publicly filed Report and Accounts 2026.
